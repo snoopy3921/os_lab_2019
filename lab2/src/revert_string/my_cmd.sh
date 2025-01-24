@@ -20,3 +20,13 @@ gcc main.c -L. -lrevert_string_dynamic -o main_dynamic #Link with shared library
 ## Note the when create a library .a, prefix lib... is needed, then when include just use -l... (... is the name of lib)
 #Run the program
 ./main Main_file_dynamic!
+
+
+## Note 
+# -I path to header files .h ( -I./math/Inc )
+# -L path to library files .a or .so ( -L./math_lib )
+# -l name of library (-lmy_lib)
+# -shared to say that we are gonna create dynamic lib
+# -o output file name (-o my_lib.so)
+# -c compile object files only, executing files are not conpiled
+# -fPIC to say that we are gonna create dynamic object file for use in dynamic lib creation
