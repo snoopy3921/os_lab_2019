@@ -30,3 +30,14 @@ gcc main.c -L. -lrevert_string_dynamic -o main_dynamic #Link with shared library
 # -o output file name (-o my_lib.so)
 # -c compile object files only, executing files are not conpiled
 # -fPIC to say that we are gonna create dynamic object file for use in dynamic lib creation
+
+
+##Note
+#Use objdump
+# objdump [option] [objfile]
+# -d to show disassembly
+# -t to show symbol table
+# -r to show relocations
+# -s to show section headers
+# -S to show source code
+# bla bla
