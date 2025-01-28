@@ -1,5 +1,7 @@
 {
       "files.associations": {
-            "revert_string.h": "c"
+            "revert_string.h": "c",
+            "random": "c",
+            "limits": "c"
       }
 }
