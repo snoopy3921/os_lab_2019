@@ -15,10 +15,18 @@
 #include "find_min_max.h"
 #include "utils.h"
 
+static int timeout_flag;
+void handle_alarm()
+{
+  timeout_flag = 1;
+}
+
 int main(int argc, char **argv) {
   int seed = -1;
   int array_size = -1;
   int pnum = -1;
+  int timeout = -1;
+  timeout_flag = 0;
   bool with_files = false;
 
   while (true) {
@@ -28,6 +36,7 @@ int main(int argc, char **argv) {
                                       {"array_size", required_argument, 0, 0},
                                       {"pnum", required_argument, 0, 0},
                                       {"by_files", no_argument, 0, 'f'},
+                                      {"timeout", required_argument, 0, 0},
                                       {0, 0, 0, 0}};
 
     int option_index = 0;
@@ -67,6 +76,14 @@ int main(int argc, char **argv) {
             break;
           case 3:
             with_files = true;
+            break;
+          case 4:
+            timeout = atoi(optarg);
+            printf("Timeout: %d\n", timeout);
+            if (timeout > 0) {
+              signal(SIGALRM, handle_alarm); // Устанавливаем обработчик сигнала
+              alarm(timeout); // Устанавливаем таймер
+            }
             break;
 
           default:
@@ -142,9 +159,27 @@ int main(int argc, char **argv) {
           min_max_private = GetMinMax(array, start_index, end_index);
           write(pipe_fd[i][1], &min_max_private, sizeof(min_max_private));
           close(pipe_fd[i][1]); // Close the write end of the pipe
-          exit(0);
         }
+        /* wait the parent to be killed */
+        if(timeout > 0) pause();
+        
         return 0;
+      }
+      else{
+          // while (timeout_flag == 0) {
+          //   sleep(1);
+          // }
+
+          while(waitpid(child_pid, NULL, WNOHANG) == 0)
+          {
+            if(timeout_flag == 1)
+            {
+              printf("Timeout reached. Sending SIGKILL to child process (PID: %d)\n", child_pid);
+              kill(child_pid, SIGKILL); // Send SIGKILL to the child process
+              break;
+            }
+            sleep(1);
+          }
       }
 
     } else {
