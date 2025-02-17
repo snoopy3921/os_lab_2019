@@ -3,6 +3,7 @@
             "revert_string.h": "c",
             "random": "c",
             "limits": "c",
-            "stdbool.h": "c"
+            "stdbool.h": "c",
+            "stdlib.h": "c"
       }
 }
